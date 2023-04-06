@@ -9,11 +9,12 @@ $finder = PhpCsFixer\Finder::create()
     ->ignoreVCS(true)
 ;
 
-return PhpCsFixer\Config::create()
+return (new PhpCsFixer\Config())
     ->setRules(array(
         '@Symfony' => true,
-        'binary_operator_spaces' => ['align_double_arrow' => false],
-        'array_syntax' => ['syntax' => 'short'],
+        'binary_operator_spaces' => [
+           'operators' => ['=>' => 'single_space'],
+        ],
         'linebreak_after_opening_tag' => true,
         'not_operator_with_successor_space' => true,
         'phpdoc_order' => false,
