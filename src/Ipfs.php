@@ -51,7 +51,7 @@ class Ipfs
      *
      * @param string|array $files
      */
-    public function add($files, bool $pin = false, $wrap = false): array
+    public function add($files, bool $pin = false, bool $wrap = false): array
     {
         $request = $this->client->request('add', [
             'pin' => $pin,

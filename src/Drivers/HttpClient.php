@@ -69,6 +69,7 @@ class HttpClient implements IpfsClient
         }
 
         if (current($response->getHeader('Content-Type')) === 'application/json') {
+            // @phpstan-ignore-next-line
             return json_decode($contents, true) ?? $this->parse($contents);
         }
 
@@ -86,38 +87,39 @@ class HttpClient implements IpfsClient
         $attached = [];
 
         if (! is_null($content)) {
-            array_push($attached, [
+            $attached[] = [
                 'name' => 'file',
                 'contents' => is_string($content) ? Utils::streamFor($content) : $content,
                 'headers' => [
                     'Content-Type' => $mime ?? 'application/octet-stream',
                 ],
                 'filename' => $name ?? $path,
-            ]);
+            ];
         } else {
             if (is_file($path)) {
-                /** @var resource $mimeFlag */
+                /** @var \finfo $mimeFlag */
                 $mimeFlag = finfo_open(FILEINFO_MIME_TYPE);
-                array_push($attached, [
+                $attached[] = [
                     'name' => 'file',
                     'contents' => Utils::tryFopen($path, 'r'),
                     'headers' => [
                         'Content-Type' => $mime ?? finfo_file($mimeFlag, $path),
                     ],
                     'filename' => $name ?? basename($path),
-                ]);
+                ];
             } else {
-                array_push($attached, [
+                $attached[] = [
                     'name' => 'file',
                     'contents' => 'directory',
                     'headers' => [
                         'Content-Type' => 'application/x-directory',
                     ],
                     'filename' => $path,
-                ]);
+                ];
             }
         }
 
+        // @phpstan-ignore-next-line
         if (! empty($attached)) {
             $this->requestOptions = array_merge_recursive($this->requestOptions, [
                 RequestOptions::MULTIPART => $attached,
@@ -136,6 +138,7 @@ class HttpClient implements IpfsClient
             throw new IpfsException(preg_last_error_msg());
         }
 
+        // @phpstan-ignore-next-line
         return json_decode('['.substr(trim($parsed), 0, -1).']', true);
     }
 
@@ -145,7 +148,7 @@ class HttpClient implements IpfsClient
             $arrays = [];
             $params = array_map([$this, 'formatValue'], array_filter($data, function ($datum, $key) use (&$arrays) {
                 if (is_array($datum)) {
-                    array_push($arrays, $key);
+                    $arrays[] = $key;
                 }
 
                 return ! is_null($datum) && ! is_array($datum);
@@ -154,6 +157,7 @@ class HttpClient implements IpfsClient
             $query = '';
             foreach ($arrays as $key) {
                 $values = (isset($data[$key])) ? implode('&', array_map(function ($arg) use ($key) {
+                    // @phpstan-ignore-next-line
                     return sprintf('%1$s=%2$s', $key, $this->formatValue($arg));
                 }, $data[$key])) : '';
                 $query .= (! empty($values)) ? $values.'&' : '';

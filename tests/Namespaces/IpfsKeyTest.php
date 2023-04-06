@@ -9,11 +9,11 @@ class IpfsKeyTest extends IpfsTestCase
     /**
      * As key/rotate, the ipfs daemon need to be shutdown to run this command.
      */
-//    public function testItExport(): void
-//    {
-//        $this->ipfs->key()->gen($keyName = 'testkey');
-//        $result = $this->ipfs->key()->export($keyName);
-//    }
+    //    public function testItExport(): void
+    //    {
+    //        $this->ipfs->key()->gen($keyName = 'testkey');
+    //        $result = $this->ipfs->key()->export($keyName);
+    //    }
 
     public function testItGenerateANewPair(): void
     {
